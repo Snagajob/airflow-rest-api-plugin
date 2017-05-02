@@ -8,12 +8,12 @@ from airflow.www.app import csrf
 
 from flask import Blueprint, request, jsonify
 from flask_admin import BaseView, expose
+from urllib.request import urlopen
 
 from datetime import datetime
 import airflow
 import logging
 import subprocess
-import urllib2
 import os
 import socket
 
@@ -712,7 +712,7 @@ class REST_API(BaseView):
 
         refresh_dag_url = str(airflow_webserver_base_url) + '/admin/airflow/refresh?dag_id=' + str(dag_id)
         logging.info("Calling: " + str(refresh_dag_url))
-        response = urllib2.urlopen(refresh_dag_url)
+        response = urlopen(refresh_dag_url)
         html = response.read()  # avoid using this as the output because this will include a large HTML string
         return REST_API_Response_Util.get_200_response(base_response=base_response, output="DAG [{}] is now fresh as a daisy".format(dag_id))
 
